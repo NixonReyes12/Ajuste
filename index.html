@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ajuste por Mínimos Cuadrados – Topografía</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Ajuste por Mínimos Cuadrados · Topografía</h1>
+  <p>Método paramétrico · Nivelación geométrica 1D y red geodésica 2D amarrada (Baarda, χ², elipses de error)</p>
+</header>
+<main>
+  <div class="card">
+    <div class="params"><div><label>Proyecto</label><input type="text" id="p_nom" placeholder="Nombre del proyecto"></div><div><label>Operador</label><input type="text" id="p_op"></div></div>
+    <div class="bar"><button class="sec" id="gp">Guardar proyecto (JSON)</button><label class="sec up">Cargar proyecto<input type="file" id="cp" accept=".json" hidden></label></div>
+  </div>
+  <div class="tabs">
+    <div class="tab on" data-p="pn">Nivelación 1D</div>
+    <div class="tab" data-p="pr">Red 2D</div>
+  </div>
+
+  <section class="panel on" id="pn">
+    <div class="card">
+      <h2>Datos de nivelación</h2>
+      <p class="hint">Puede arrastrar un TXT sobre cada cuadro. Separe campos con espacios, comas o «;». Todo lo posterior a «#» es comentario. Puede escribir o cargar un TXT.</p>
+      <div class="grid">
+        <div><label>nivelacion.txt <small>(desde hasta desnivel_m longitud_km)</small></label><textarea id="n_obs"></textarea><input class="file" type="file" data-t="n_obs"></div>
+        <div><label>fijos_nivelacion.txt <small>(nombre altura_m)</small></label><textarea id="n_fix"></textarea><input class="file" type="file" data-t="n_fix"></div>
+      </div>
+      <div class="params">
+        <div><label>σ₀ a priori</label><input type="number" id="n_s0" value="1" step="any"></div>
+        <div><label>α (χ²)</label><input type="number" id="n_alfa" value="0.05" step="any"></div>
+        <div><label>σ por km [mm]</label><input type="number" id="n_sk" value="5" step="any"></div>
+      </div>
+      <div class="bar"><button class="go" id="bn">Ejecutar ajuste</button><button class="sec" id="en">Cargar ejemplo</button><button class="sec" id="dn">Reporte TXT</button><button class="sec" id="cn">Exportar CSV</button><button class="sec" id="pn_">Imprimir / PDF</button></div>
+    </div>
+    <div id="rn"></div>
+  </section>
+
+  <section class="panel" id="pr">
+    <div class="card">
+      <h2>Datos de la red 2D</h2>
+      <p class="hint">Puntos: F = fijo, N = nuevo (coordenadas aproximadas). Distancias y ángulos son opcionales, pero debe haber redundancia (n − u ≥ 1).</p>
+      <div class="grid">
+        <div><label>puntos.txt <small>(nombre este norte F/N)</small></label><textarea id="r_pts"></textarea><input class="file" type="file" data-t="r_pts"></div>
+        <div><label>distancias.txt <small>(desde hasta dist_m sigma_m)</small></label><textarea id="r_dis"></textarea><input class="file" type="file" data-t="r_dis"></div>
+        <div><label>angulos.txt <small>(vértice atrás adelante gon sigma_gon)</small></label><textarea id="r_ang"></textarea><input class="file" type="file" data-t="r_ang"></div>
+        <div><label>azimuts.txt <small>(desde hasta azimut_gon sigma_gon)</small></label><textarea id="r_azi"></textarea><input class="file" type="file" data-t="r_azi"></div>
+      </div>
+      <div class="params">
+        <div><label>σ₀² a priori</label><input type="number" id="r_s02" value="1" step="any"></div>
+        <div><label>α (χ²)</label><input type="number" id="r_alfa" value="0.05" step="any"></div>
+        <div><label>α₀ (Baarda)</label><input type="number" id="r_alfa0" value="0.001" step="any"></div>
+        <div><label>Aviso si máx|x| &gt; [m]</label><input type="number" id="r_tol" value="0.10" step="any"></div>
+        <div><label>Escala de elipses</label><input type="number" id="r_esc" value="100" step="any"></div>
+      </div>
+      <div class="bar"><button class="go" id="br">Ejecutar ajuste</button><button class="sec" id="er">Cargar ejemplo</button><button class="sec" id="dr">Reporte TXT</button><button class="sec" id="cr">Exportar CSV</button><button class="sec" id="pr_">Imprimir / PDF</button></div>
+    </div>
+    <div id="rr"></div>
+  </section>
+</main>
+<footer>Réplica web de Proyecto_Ajuste_Final.m · todo se calcula en tu navegador</footer>
+<script src="app.js"></script>
+</body>
+</html>
